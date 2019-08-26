@@ -1,0 +1,71 @@
+* {
+  margin: 0;
+  padding: 0;
+}
+html,
+body,
+#content {
+  height: 100%;
+  width: 100%;
+}
+#menu {
+  height: 100%;
+  width: 3%;
+  border: 1px solid black;
+  float: left;
+  margin: 0;
+}
+#circle {
+  margin: 12px 2px 2px;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: lightgrey;
+  border: 2px dashed limegreen;
+}
+#rect {
+  margin: 12px 2px 2px;
+  width: 40px;
+  height: 40px;
+  background: green;
+}
+
+#triangle {
+  margin: 2px 2px 2px;
+  border: 22px solid transparent;
+  border-bottom: 33px solid green;
+  display: block;
+  width: 0;
+  height: 0;
+}
+
+#container {
+  padding: 0;
+  margin: 0;
+  height: 100%;
+  width: 96%;
+  float: right;
+}
+
+#canvas {
+  padding: 0;
+  margin: 0;
+  height: 100%;
+  width: 100%;
+}
+
+.svg-triangle{
+  margin: 0 auto;
+  width: 100px;
+  height: 100px;
+}
+
+.svg-triangle polygon {
+  fill:#98d02e;
+  stroke:#65b81d;
+  stroke-width:2;
+}
+
+#line {
+  background: green;
+}
