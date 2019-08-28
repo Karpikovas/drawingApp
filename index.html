@@ -7,26 +7,38 @@
   <script src="script.js"></script>
 </head>
 <body>
-<div id="content">
-  <div id="menu">
-    <div id="circle" class="active"></div>
-    <div id="rect" class="disabled"></div>
-    <div id="triangle" class="disabled"></div>
-    <div id="btn-delete" class="button disabled">
-      <span id="x">x</span>
-    </div>
-    <input type="color" id="color-picker" disabled="false"
-           value="#808080">
-    <div id="btn-increase" class="button disabled">
-      <span>+</span>
-    </div>
-    <div id="btn-reduce" class="button disabled">
-      <span>-</span>
-    </div>
+<div id="content" class="content">
 
+  <div id="menu" class="menu">
 
+    <ul>
+      <li id="circle" class="menu__item menu__item-circle"></li>
+      <li id="rect" class="menu__item menu__item-rect"></li>
+      <li id="triangle" class="menu__item menu__item-triangle"></li>
+
+      <li>
+        <input
+          type="color"
+          id="color-picker"
+          disabled
+          value="#808080"
+          class="menu__item menu__item-color-picker"
+        >
+      </li>
+      <li>
+        <button id="btn-delete" class="menu__item menu__item-button" disabled>x</button>
+      </li>
+      <li>
+        <button id="btn-increase" class="menu__item menu__item-button" disabled>+</button>
+      </li>
+      <li>
+        <button id="btn-reduce" class="menu__item menu__item-button" disabled>-</button>
+      </li>
+    </ul>
   </div>
+
   <div id="container" class="container">
+
   </div>
 </div>
 </body>

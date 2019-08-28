@@ -8,165 +8,112 @@ body {
   width: 100%;
 }
 
-#content {
+.content {
+  position: absolute;
+  display: flex;
+  justify-content: space-between;
   height: 100%;
   width: 100%;
-  position: absolute;
 }
 
-/*Меню*/
+/* --- Меню ---------*/
 
-#menu {
-  height: 100%;
+.menu {
+  flex-grow: 0;
+  flex-shrink: 0;
   width: 5%;
-  float: left;
   background-color: lightblue;
 }
 
-#circle.active {
+.menu__item {
+  display: block;
+  width: 40px;
+  height: 40px;
   margin: 12px auto auto;
-  width: 50px;
-  height: 50px;
-  border-radius: 50%;
-  background: yellow;
-}
-#circle.disabled {
-  margin: 12px auto auto;
-  width: 35px;
-  height: 35px;
-  border-radius: 50%;
-  background: white;
   opacity: 0.5;
-}
-#circle.disabled:hover{
-  opacity: 1;
-}
-#rect.active {
-  margin: 12px auto auto;
-  width: 50px;
-  height: 50px;
-  background: yellow;
+  background: white;
 }
 
-#rect.disabled {
-  margin: 12px auto auto;
-  width: 35px;
-  height: 35px;
-  background: white;
-  opacity: 0.5;
-}
-#rect.disabled:hover{
+.menu__item:hover {
   opacity: 1;
 }
-#triangle.active {
-  margin: 0px auto auto;
-  border: 28px solid transparent;
-  border-bottom: 39px solid yellow;
-  display: block;
-  width: 0;
-  height: 0;
+
+.menu__item-circle {
+  border-radius: 50%;
 }
-#triangle.disabled {
-  margin: 0px auto auto;
-  border: 22px solid transparent;
+.menu__item-rect {}
+
+.menu__item-circle_active,
+.menu__item-rect_active {
+  background: yellow;
+  opacity: 1;
+  transform: scale(1.1);
+}
+
+.menu__item-triangle {
   display: block;
   width: 0;
   height: 0;
+  margin: 0px auto auto;
+  background: transparent;
+  border: 22px solid transparent;
   border-bottom: 33px solid white;
   opacity: 0.5;
 }
-#triangle.disabled:hover{
+.menu__item-triangle_active {
+  border-bottom: 33px solid yellow;
   opacity: 1;
+  transform: scale(1.1);
 }
 
-
-.button {
-  margin: 12px auto auto;
-  width: 40px;
-  height: 40px;
-
+.menu__item-button {
   color: #fff;
   font-family: 'Helvetica', 'Arial', sans-serif;
   font-size: 2em;
   font-weight: bold;
   text-align: center;
   border-radius: 5px;
-}
-#btn-delete.button{
-  margin: 150px auto auto;
-}
-.button.active {
-  opacity: 0.5;
   background: #008000;
 }
-.button.active:hover {
-  opacity: 1;
-}
-.button.disabled {
+
+.menu__item-button:disabled {
   background: gray;
-  opacity: 0.5;
 }
 
-#color-picker {
-  margin: 12px auto auto;
-  width: 40px;
-  height: 40px;
-  text-align: center;
-  display: block;
-  opacity: 0.5;
-}
-#color-picker:hover {
-  opacity: 1;
-}
-#color-picker:disabled {
-  opacity: 0.3;
+.menu__item-color-picker {
+  margin: 120px auto auto;
 }
 
-/*Контейнер и фигуры*/
 
+/*-------Контейнер----------------*/
 
 .container {
-  height: 100%;
   width: 95%;
-  float: right;
 }
 
-.triangle {
+.shape {
   position: absolute;
-  border: 22px solid transparent;
   display: block;
+  width: 40px;
+  height: 40px;
+  background: #008000;
+  transform: scale(1.0);
+}
+
+.shape_active {
+  opacity: 0.5;
+  transform: scale(1.2);
+}
+
+.shape__circle {
+  border-radius: 50%;
+}
+.shape__rect {}
+
+.shape__triangle {
   width: 0;
   height: 0;
+  background: transparent;
+  border: 22px solid transparent;
   border-bottom: 37.4px solid #008000;
-}
-.rect {
-  position: absolute;
-  width: 40px;
-  height: 40px;
-  background: #008000;
-}
-
-.circle {
-  position: absolute;
-  width: 40px;
-  height: 40px;
-  border-radius: 50%;
-  background: #008000;
-}
-.circle.active {
-  opacity: 0.4;
-  width: 50px;
-  height: 50px;
-}
-
-.rect.active {
-  opacity: 0.4;
-  width: 50px;
-  height: 50px;
-}
-
-.triangle.active {
-  opacity: 0.4;
-  border: 28px solid transparent;
-  border-bottom: 47.6px solid #008000;
 }
