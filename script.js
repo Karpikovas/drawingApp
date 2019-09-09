@@ -9,13 +9,13 @@
   var colorPicker;
 
   var selectedType;
-  var selectedShape;
   var onMove;
+
+  var shapes = [];
 
   function init() {
 
-    selectedType = 'circle';
-    selectedShape = null;
+    selectedType = null;
     onMove = false;
 
     container = document.getElementById('container');
@@ -24,14 +24,12 @@
     btnReduce = document.getElementById('btn-reduce');
     colorPicker = document.getElementById('color-picker');
 
-    document.getElementById('circle').classList.add('menu__item-circle_active');
-
-
     bindEvents();
 
   }
 
   function bindEvents() {
+
     container.addEventListener('click', function (e) {
       paintShape(e);
     }, false);
@@ -55,44 +53,48 @@
 
   function onShapeClick(typeOfShape) {
 
-    let oldTypeOfShape = document.getElementById(selectedType);
-    oldTypeOfShape.classList.remove(`menu__item-${selectedType}_active`);
+    if (selectedType) {
+      let oldTypeOfShape = document.getElementById(selectedType);
+      oldTypeOfShape.classList.remove(`menu__item-${selectedType}_active`);    
+    }
 
-    let newTypeOfShape = document.getElementById(typeOfShape);
-    newTypeOfShape.classList.add(`menu__item-${typeOfShape}_active`);
-
-    selectedType = typeOfShape;
+    if (selectedType !== typeOfShape) {
+      let newTypeOfShape = document.getElementById(typeOfShape);
+      newTypeOfShape.classList.add(`menu__item-${typeOfShape}_active`);      
+      selectedType = typeOfShape;
+    } else {
+      selectedType = null;
+    }    
   }
 
   function changeShapeColor() {
-
-    if (selectedShape.classList.contains('triangle')) {
-      selectedShape.style.borderBottomColor = colorPicker.value;
-    } else {
-      selectedShape.style.background = colorPicker.value;
-    }
+    let selectedShape = findActiveShape();
+    selectedShape.color = colorPicker.value;
+    applyChanges(selectedShape);
   }
 
   function increaseShape() {
-    let scale = selectedShape.getBoundingClientRect().width / selectedShape.offsetWidth;
-    selectedShape.style.transform = `scale(${scale + 0.1})`;
+    let selectedShape = findActiveShape();
+    selectedShape.scale += 0.1;
+    applyChanges(selectedShape);
   }
 
   function reduceShape() {
-    let scale = selectedShape.getBoundingClientRect().width / selectedShape.offsetWidth;
-    if (scale > 0.1) {
-      selectedShape.style.transform = `scale(${scale - 0.1})`;
+    let selectedShape = findActiveShape();
+    if (selectedShape.scale > 0.1) {
+      selectedShape.scale -= 0.1;
+      applyChanges(selectedShape);
     }
   }
 
   function deleteShape() {
-    selectedShape.parentNode.removeChild(selectedShape);
+    let selectedShape = findActiveShape();
+    selectedShape.elem.parentNode.removeChild(selectedShape.elem);
     disabledShapeMenu();
-    selectedShape = null;
   }
 
   function paintShape(coords) {
-    if (!onMove) {
+    if (!onMove && selectedType) {
 
       let top = coords.pageY;
       let left = coords.pageX;
@@ -102,21 +104,29 @@
       div.classList.add(`shape__${selectedType}`);
       container.appendChild(div);
 
-      div.style.left = left - div.offsetWidth / 2 + 'px';
-      div.style.top = top - div.offsetHeight / 2 + 'px';
+      let dX = left - div.offsetWidth / 2;
+      let dY = top - div.offsetHeight / 2;
+
+      shapes.push({
+        typeOfShape: selectedType,
+        elem: div,
+        dX: dX,
+        dY: dY,
+        scale: 1,
+        color: '#008000',
+        select: false  
+      });
+      
+      applyChanges(findSelectedShape(div));
 
       div.onmousedown = function (event) {
         event.stopPropagation();
         event.preventDefault();
 
-        if (selectedShape != null) {
-          selectedShape.classList.remove('shape_active');
-        } else {
-          activeShapeMenu();
-        }
+        let selectedShape = findSelectedShape(div);
+        changeActiveShape(selectedShape);
+        activeShapeMenu();
 
-        selectedShape = div;
-        div.classList.add('shape_active');
         onMove = true;
 
         colorPicker.value = getShapeColor();
@@ -124,23 +134,19 @@
         let shiftX = event.clientX - div.offsetLeft;
         let shiftY = event.clientY - div.offsetTop;
 
-
         function moveAt(pageX, pageY) {
-
-          div.style.left = pageX - shiftX + 'px';
-          div.style.top = pageY - shiftY + 'px';
+          selectedShape.dX = pageX - shiftX;
+          selectedShape.dY = pageY - shiftY;
+          applyChanges(selectedShape);
         }
 
         function onMouseMove(event) {
           moveAt(event.pageX, event.pageY);
-
-
         }
 
         container.addEventListener('mousemove', onMouseMove);
 
         div.onmouseup = function () {
-
           container.removeEventListener('mousemove', onMouseMove);
           div.onmouseup = null;
         };
@@ -156,12 +162,51 @@
 
 //------------Вспомогательные функции-----------------
 
+  function applyChanges(shape) {
+
+    if (shape.select) {
+      shape.elem.classList.add('shape_active');
+    } else {
+      shape.elem.classList.remove('shape_active');
+    }
+
+    if (shape.elem.classList.contains('shape__triangle')) {
+      shape.elem.style.borderBottomColor = shape.color;
+    } else {
+      shape.elem.style.background = shape.color;
+    }
+
+    shape.elem.style.transform = `scale(${shape.scale})`;
+    shape.elem.style.left = shape.dX + 'px';
+    shape.elem.style.top = shape.dY + 'px';
+  }
+
+  function findSelectedShape(div) {
+    return shapes.find(shape => shape.elem === div);
+  }
+
+  function findActiveShape() {
+    return shapes.find(shape => shape.select === true);
+  }
+
+  function changeActiveShape(newActiveShape) {
+    let oldActiveShape = findActiveShape();
+
+    if (oldActiveShape) {
+     oldActiveShape.select = false;
+     applyChanges(oldActiveShape); 
+    }
+
+    newActiveShape.select = true;
+    applyChanges(newActiveShape);
+  }
+
   function activeShapeMenu() {
     btnDelete.removeAttribute('disabled');
     btnIncrease.removeAttribute('disabled');
     btnReduce.removeAttribute('disabled');
     colorPicker.removeAttribute('disabled');
-    colorPicker.value = selectedShape ? selectedShape.style.background : '#008000';
+    colorPicker.value = '#008000';
   }
 
   function disabledShapeMenu() {
@@ -173,29 +218,10 @@
   }
 
   function getShapeColor() {
-    let color;
-    if (selectedShape.classList.contains('triangle')) {
-      color = getStyle(selectedShape, 'borderBottomColor');
-    } else {
-      color = getStyle(selectedShape, 'backgroundColor');
-    }
-
-    let rgbArray = color.match(/\d+/g);
-    return rgbToHex(rgbArray);
+    let selectedShape = findActiveShape();
+    let color = selectedShape.color;
+    return color;
   }
-
-  function rgbToHex(rgb) {
-    return "#" + ((1 << 24) + (parseInt(rgb[0]) << 16) + (parseInt(rgb[1]) << 8) + parseInt(rgb[2])).toString(16).slice(1);
-  }
-
-
-  function getStyle(el, styleProp) {
-    if (el.currentStyle)
-      return el.currentStyle[styleProp];
-
-    return document.defaultView.getComputedStyle(el, null)[styleProp];
-  }
-
 
   window.addEventListener('load', function () {
     init();
