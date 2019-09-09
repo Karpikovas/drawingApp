@@ -88,7 +88,10 @@
   }
 
   function deleteShape() {
+
     let selectedShape = findActiveShape();
+
+    shapes =  shapes.filter(shape => shape.elem !== selectedShape.elem);
     selectedShape.elem.parentNode.removeChild(selectedShape.elem);
     disabledShapeMenu();
   }
@@ -116,7 +119,7 @@
         color: '#008000',
         select: false  
       });
-      
+
       applyChanges(findSelectedShape(div));
 
       div.onmousedown = function (event) {
